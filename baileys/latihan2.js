@@ -5,8 +5,8 @@ const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose(); // Menggunakan SQLite untuk penyimpanan
 const express = require('express');
 const app = express();
-const port = 3000;
-const portSocket = 8080;   // Server WebSocket di port 8080
+const port = process.env.PORT || 3000;;
+const portSocket = process.env.PORT || 8080;   // Server WebSocket di port 8080
 const path = require('path');
 
 const http = require('http');
@@ -25,7 +25,7 @@ const server = http.createServer((req, res) => {
 // Menambahkan Socket.IO ke server
 const io = socketIo(server, {
     cors: {
-        origin: ['https://needle-moscow-oz-cooked.trycloudflare.com'],  // Ganti dengan domain tempat frontend Anda di-host
+        origin: ['https://railway.com/project/9a70c1b1-6707-4717-ac3b-4d35854e1360'],  // Ganti dengan domain tempat frontend Anda di-host
         methods: ['GET', 'POST'],
         allowedHeaders: ['my-custom-header'],
         credentials: true
@@ -275,9 +275,9 @@ app.listen(port, () => {
 });
 
 // Menjalankan server pada port tertentu
-server.listen(portSocket, () => {
-    console.log('Server listening on port ${portSocket}');
-});
+//server.listen(portSocket, () => {
+//    console.log('Server listening on port ${portSocket}');
+//});
 
 
 
