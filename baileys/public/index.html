@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container mt-5">
+		<div class="row g-3 align-items-center">
+		<div class="form-floating col-auto">
+			<input type="text" id="Request" class="form-control" id="floatingInput" placeholder="name@example.com">
+			<label for="floatingInput">Subject/Request</label>
+			<span class="error-message"></span> <!-- Pesan error muncul di sini -->
+		</div>
+		<div class="form-floating col-auto">
+			<input type="text" id="Requestor" class="form-control" id="floatingInput" placeholder="name@example.com">
+			<label for="floatingInput">Requestor</label>
+			<span class="error-message"></span>
+		</div>
+		<div class="col-auto">	
+			<div class="dropdown">
+			<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				Submit
+			</button>
+			<ul class="dropdown-menu">
+				<li><button class="dropdown-item" type="button" onclick="AddNew('Email')">Email</button></li>
+				<li><button class="dropdown-item" type="button" onclick="AddNew('Telegram')">Telegram</button></li>
+			</ul>
+			</div>
+		</div>
+		</div>
+	</div>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">List Request</h1>
+		<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+			<button class="btn btn-danger me-md-2" type="button" onclick="Delateall()">Hapus Data All</button>
+			<button class="btn btn-warning me-md-2" type="button" onclick="downloadtxt()">Report</button>
+		</div>
+		<h2>Pilih Kolom yang Ingin Ditampilkan</h2>
+		<div id="columnCheckboxes">
+			<label><input type="checkbox" value="date" checked> Date</label>
+			<label><input type="checkbox" value="apps" checked> Apps</label>
+			<label><input type="checkbox" value="source" checked> Source</label>
+			<label><input type="checkbox" value="group_name" checked> Group Name</label>
+			<label><input type="checkbox" value="content" checked> Request</label>
+			<label><input type="checkbox" value="sender" checked> Sender</label>
+			<label><input type="checkbox" value="agent" checked> Agent</label>
+			<label><input type="checkbox" value="status" checked> Status</label>
+			<label><input type="checkbox" value="star" checked> Star</label>
+			<label><input type="checkbox" value="end" checked> End</label>
+		</div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="col-date">date</th>
+					<th class="col-apps">Apps</th>
+					<th class="col-source">Source</th>
+                    <th class="col-group_name">group_name</th>
+                    <th class="col-content">Subject / Request Name</th>
+                    <th class="col-sender">Requestor</th>
+                    <th class="col-agent">Agent Name</th>
+                    <th class="col-status">Status</th>
+					<th class="col-star">Start</th>
+					<th class="col-end">End</th>
+                </tr>
+            </thead>
+            <tbody id="message-table-body">
+                <!-- Data akan dimuat di sini -->
+            </tbody>
+        </table>
+    </div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h1 class="modal-title fs-5" id="exampleModalLabel">Edit Request</h1>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<form class="row g-3 needs-validation" novalidate>
+				<div class="col-md-6">
+					<label for="validationCustom01" class="form-label" >DATE</label>
+					<input id="editdate" type="text" class="form-control" required>
+					<div class="valid-feedback">
+					Looks good!
+					</div>
+				</div>
+				<div class="col-md-6">
+					<input id="editid" type="text" class="form-control" required disabled style="display: none">
+				</div>
+				<div class="col-md-6">
+					<label for="validationCustom02" class="form-label" >Source</label>
+					<input type="text" class="form-control" id="editsource" required>
+					<div class="valid-feedback">
+					Looks good!
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label for="validationCustom02" class="form-label" >Group Name</label>
+					<input type="text" class="form-control" id="editgroup" required>
+					<div class="valid-feedback">
+					Looks good!
+					</div>
+				</div>
+				<div class="col-md-12">
+					<label for="validationCustom02" class="form-label" >Requestor</label>
+					<input type="text" class="form-control" id="editrequestor" required>
+					<div class="valid-feedback">
+					Looks good!
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label for="validationCustom02" class="form-label" >Start</label>
+					<input type="text" class="form-control" id="editstart" required>
+					<div class="valid-feedback">
+					Looks good!
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label for="validationCustom02" class="form-label" >End</label>
+					<input type="text" class="form-control" id="editend" required>
+					<div class="valid-feedback">
+					Looks good!
+					</div>
+				</div>
+				<div class="col-md-12">
+					<label for="validationCustom02" class="form-label" >Request</label>
+					<textarea class="form-control" id="editrequest" rows="3"></textarea>
+					<div class="valid-feedback">
+					Looks good!
+					</div>
+				</div>
+				</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary" onclick="saveedit()">Save changes</button>
+		</div>
+		</div>
+	</div>
+	</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+	const socket = io('http://localhost:8080');   // Hubungkan ke WebSocket
+    // Mengambil data dari endpoint /messages
+    fetch('/messages')
+        .then((response) => response.json())
+        .then((data) => {
+            renderTable(data);
+        })
+        .catch((err) => console.error('Error fetching messages:', err));
+
+    let messages = []; // Untuk menyimpan data yang akan dimanipulasi
+	
+	//hide tabel
+	//=====================
+	// Fungsi untuk menampilkan/sembunyikan kolom berdasarkan checkbox
+	function toggleColumn(columnClass, isVisible) {
+		const elements = document.querySelectorAll(`.col-${columnClass}`);
+		elements.forEach(el => {
+			el.style.display = isVisible ? "table-cell" : "none";
+		});
+	}
+	
+	document.addEventListener("DOMContentLoaded", function () {
+		const checkboxes = document.querySelectorAll("#columnCheckboxes input");
+	
+		// Load status checkbox dari localStorage
+		checkboxes.forEach(checkbox => {
+			const savedState = localStorage.getItem(`checkbox-${checkbox.value}`);
+			if (savedState !== null) {
+				checkbox.checked = savedState === "true"; // Atur nilai sesuai localStorage
+			}
+	
+			checkbox.addEventListener("change", function () {
+				localStorage.setItem(`checkbox-${this.value}`, this.checked); // Simpan status checkbox
+				toggleColumn(this.value, this.checked);
+			});
+	
+			// Pastikan tampilan sesuai dengan status awal
+			toggleColumn(checkbox.value, checkbox.checked);
+		});
+	});
+
+
+    function renderTable(data) {
+        messages = data; // Simpan data ke dalam variabel global
+        const tableBody = document.getElementById('message-table-body');
+        tableBody.innerHTML = ''; // Reset tabel
+
+        if (data.length > 0) {
+            data.forEach((message, index) => {
+                const row = `
+                    <tr id="row-${message.id}">
+                        <td>${index + 1}</td>
+                        <td class="col-date">${message.date}</td>
+						<td class="col-apps">
+							    <select class="form-select" aria-label="Default select example" onchange="updateApps(${message.id}, this.value)">
+									${
+										message.Apps === 'N/A' 
+											? `<option selected disabled>Pilih Apps</option>` 
+											: `<option selected disabled>${message.Apps}</option>`
+									}
+									<option value="ICACB">ICACB</option>
+									<option value="MessageBroker">MessageBroker</option>
+									<option value="TNPS">TNPS</option>
+									<option value="TelkomselMerchantSuite">TelkomselMerchantSuite</option>
+									<option value="byU-LMS Magik">byU-LMS Magik</option>
+									<option value="INGW">INGW</option>
+									<option value="TeRe">TeRe</option>
+									<option value="NGRS">NGRS</option>
+									<option value="Antreaja">Antreaja</option>
+									<option value="Pegasus">Pegasus</option>
+									<option value="RMS">RMS</option>
+									<option value="UPCC">UPCC</option>
+									<option value="SITTA">SITTA</option>
+									<option value="byU-SA CMS">byU-SA CMS</option>
+									<option value="URP">URP</option>
+									<option value="Holistic Modchan">Holistic Modchan</option>
+								</select>
+						</td>
+						<td class="col-source">${message.Source}</td>
+                        <td class="col-group_name">${message.group_name}</td>
+                        <td class="col-content">
+						<div class="form-floating mb-3">
+							<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2Disabled" style="height: 100px " disabled>${message.content}</textarea>
+							<label for="floatingTextarea2Disabled">Request</label>
+						</div>
+						</td>
+                        <td class="col-sender">${message.sender}</td>
+                        <td class="col-agent">
+							    <select class="form-select" aria-label="Default select example" onchange="updateAgent(${message.id}, this.value)">
+									${
+										message.Agent === 'N/A' 
+											? `<option selected disabled>Pilih Agent</option>` 
+											: `<option selected disabled>${message.Agent}</option>`
+									}
+									<option value="GHALIB RAMADAN">GHALIB RAMADAN</option>
+									<option value="HERI PRASETIA">HERI PRASETIA</option>
+									<option value="TEGUH PRASTYO">TEGUH PRASTYO</option>
+									<option value="ROSIT SANUSI">ROSIT SANUSI</option>
+									<option value="YUSUF ZAMRUD RAMADHAN">YUSUF ZAMRUD RAMADHAN</option>
+									<option value="Riza Nur Muhammad">Riza Nur Muhammad</option>
+									<option value="ADE IRVAN KRISTIADI">ADE IRVAN KRISTIADI</option>
+									<option value="AGUNG ADI SAPUTRA">AGUNG ADI SAPUTRA</option>
+									<option value="TUFAIL AKHMAD SATRIO">TUFAIL AKHMAD SATRIO</option>
+									<option value="YULIUS JATI SATRIYO UTOMO">YULIUS JATI SATRIYO UTOMO</option>
+									<option value="Mohammad Adzana Dewangga">Mohammad Adzana Dewangga</option>
+									<option value="BAITAL HAKIKI">BAITAL HAKIKI</option>
+									<option value="Rafiq Freda Aryanta">Rafiq Freda Aryanta</option>
+									<option value="Maulana Mahmud">Maulana Mahmud</option>
+									<option value="M. Elrico Afdillah">M. Elrico Afdillah</option>
+									<option value="MOH QUIRNI">MOH QUIRNI</option>
+									<option value="Bagus Muhammad Wijaksono">Bagus Muhammad Wijaksono</option>
+									<option value="Ferdinansyah Da Yuan">Ferdinansyah Da Yuan</option>
+								</select>
+						</td>
+                        <td class="status-cell col-status">
+                            <div class="btn-group">
+                                <button type="button" class="btn ${getStatusColor(message.Status)[0]} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ${getStatusColor(message.Status)[1]}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    ${getDropdownOptions(message.id, message.Status)}
+                                </ul>
+                            </div>
+                        </td>
+                        <td class="col-star">${message.Star}</td>
+                        <td class="col-end">${message.End}</td>
+						<td>
+								<!-- Button trigger modal -->
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="EditReq(${message.id})">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard2-plus" viewBox="0 0 16 16">
+							<path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z"/>
+							<path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"/>
+							<path d="M8.5 6.5a.5.5 0 0 0-1 0V8H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V9H10a.5.5 0 0 0 0-1H8.5z"/>
+							</svg>
+							</button>
+						</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        } else {
+            tableBody.innerHTML = `<tr><td colspan="9" class="text-center">No messages found</td></tr>`;
+        }
+		
+		document.querySelectorAll("#columnCheckboxes input").forEach(checkbox => {
+        toggleColumn(checkbox.value, checkbox.checked);
+    });
+		
+    }
+	
+    function getDropdownOptions(id, status) {
+        let options = '';
+        switch (status) {
+            case '1': // On Cek
+                options += `<li><a class="dropdown-item" onclick="updateStatus(${id}, '2')">In Progress</a></li>`;
+                break;
+            case '2': // In Progress
+                options += `<li><a class="dropdown-item" onclick="updateStatus(${id}, '3')">Hold</a></li>`;
+                options += `<li><a class="dropdown-item" onclick="updateStatus(${id}, '4')">Done</a></li>`;
+                break;
+            case '3': // Hold
+                options += `<li><a class="dropdown-item" onclick="duplicateData(${id})">Duplicate</a></li>`;
+                break;
+            case '4': // Done
+                options += `<li><a class="dropdown-item" onclick="updateStatus(${id}, '3')">Hold</a></li>`;
+                break;
+            default:
+                break;
+        }
+        return options;
+    }
+
+    function updateStatus(id, newStatus) {
+        const message = messages.find((msg) => msg.id === id);
+
+        if (!message) {
+            console.error(`Message dengan ID ${id} tidak ditemukan.`);
+            return;
+        }
+	
+        // Update status di frontend
+        message.Status = newStatus;
+        if (newStatus === '2') { // Contoh: Jika status adalah "In Progress"
+			const currentDateTime = new Date();
+			const now = new Date();
+			const offset = now.getTimezoneOffset() * 60000; // Offset dalam milidetik
+			message.Star = new Date(now.getTime() - offset).toISOString().split('T').join(' ').split('.')[0];
+		} else {
+			const currentDateTime = new Date();
+			const now = new Date();
+			const offset = now.getTimezoneOffset() * 60000; // Offset dalam milidetik
+			message.End = new Date(now.getTime() - offset).toISOString().split('T').join(' ').split('.')[0];
+		}
+		
+		renderTable(messages);
+
+        // Kirim permintaan ke server untuk memperbarui status di database
+        fetch('/update-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: id, newStatus: newStatus }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    console.log(`Status untuk pesan ${id} berhasil diperbarui menjadi ${newStatus}`);
+                } else {
+                    console.error('Gagal memperbarui status');
+                }
+            })
+            .catch((error) => {
+                console.error('Terjadi kesalahan:', error);
+            });
+    }
+
+    function duplicateData(id) {
+        const message = messages.find((msg) => msg.id === id);
+
+        if (!message) {
+            console.error(`Message dengan ID ${id} tidak ditemukan.`);
+            return;
+        }
+		
+		message.Status = '4'; //merubah dari holde ke done
+		statusnow = '4';
+		
+        // Duplikasi data
+        const newMessage = { ...message };
+        newMessage.id = messages.length + 1; // Beri ID baru
+        newMessage.Status = '1'; // Status default menjadi On Cek
+        //newMessage.date = new Date().toISOString().split('T').join(' ').split('.')[0]; // Set tanggal baru jika perlu
+		newMessage.Star = 'N/A';
+		newMessage.End = 'N/A';
+        messages.unshift(newMessage); // Tambahkan data baru ke array
+        renderTable(messages);
+		
+		
+        // Kirim permintaan ke server untuk menyimpan data baru
+        fetch('/add-message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newMessage),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    console.log('Data berhasil diduplikasi.');
+                } else {
+                    console.error('Gagal menduplikasi data.');
+                }
+            })
+            .catch((error) => {
+                console.error('Terjadi kesalahan:', error);
+            });
+			
+		
+		// Kirim permintaan ke server untuk memperbarui status di database
+        fetch('/update-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: id, newStatus: statusnow }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    console.log(`Status untuk pesan ${id} berhasil diperbarui menjadi ${statusnow}`);
+                } else {
+                    console.error('Gagal memperbarui status');
+                }
+            })
+            .catch((error) => {
+                console.error('Terjadi kesalahan:', error);
+            });
+		
+    }
+	
+	//============= Socketio
+	socket.on('newMessage', (msg) => {
+		console.log('Pesan baru diterima:', msg);
+	
+		// Pastikan messages adalah array
+		if (!Array.isArray(messages)) {
+			messages = []; // Reset messages jika bukan array
+		}
+	
+		// Cek apakah messages kosong sebelum melakukan reload atau hanya merender
+		if (messages.length === 0) {
+			// Jika messages kosong, refresh halaman
+			messages.unshift(msg); // Menambahkan pesan baru
+			location.reload(); // Refresh halaman
+		} else {
+			// Jika messages tidak kosong, hanya merender ulang tanpa reload
+			messages.unshift(msg); // Menambahkan pesan baru
+			renderTable(messages); // Render ulang tabel
+		}
+	});
+
+	
+
+    function getStatusColor(status) {
+        switch (status) {
+            case '2':
+                return ['btn-warning', 'In Progress'];
+            case '3':
+                return ['btn-danger', 'Hold'];
+            case '4':
+                return ['btn-success', 'Done'];
+            default:
+                return ['btn-primary', 'On Cek'];
+        }
+    }
+	
+	function updateAgent(id, newAgent) {
+    // Cari pesan berdasarkan ID
+    const message = messages.find((msg) => msg.id === id);
+
+    if (!message) {
+        console.error(`Message dengan ID ${id} tidak ditemukan.`);
+        return;
+    }
+
+    // Perbarui Agent di frontend
+    message.Agent = newAgent;
+
+    // Kirim permintaan ke server untuk memperbarui Agent di database
+    fetch('/update-agent', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: id, newAgent: newAgent }), // Kirim data ID dan Agent baru
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                console.log(`Agent untuk pesan ${id} berhasil diperbarui menjadi ${newAgent}`);
+            } else {
+                console.error('Gagal memperbarui Agent:', data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Terjadi kesalahan:', error);
+        });
+		
+	renderTable(messages); // Render ulang tabel untuk menampilkan perubahan
+	}
+	
+	function updateApps(id, newApps) {
+    // Cari pesan berdasarkan ID
+    const message = messages.find((msg) => msg.id === id);
+
+    if (!message) {
+        console.error(`Message dengan ID ${id} tidak ditemukan.`);
+        return;
+    }
+
+    // Perbarui Apps di frontend
+    message.Apps = newApps;
+
+    // Kirim permintaan ke server untuk memperbarui Apps di database
+    fetch('/update-apps', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: id, newApps: newApps }), // Kirim data ID dan Apps baru
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                console.log(`Apps untuk pesan ${id} berhasil diperbarui menjadi ${newApps}`);
+            } else {
+                console.error('Gagal memperbarui Apps:', data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Terjadi kesalahan:', error);
+        });
+		
+	renderTable(messages); // Render ulang tabel untuk menampilkan perubahan
+	}
+	
+	
+	
+	function AddNew(Source) {
+		const contentInput = document.getElementById('Request');
+		const senderInput = document.getElementById('Requestor');
+		
+		const content = contentInput.value.trim();
+		const sender = senderInput.value.trim();
+		
+	
+		// Hapus pesan error sebelum validasi baru
+		clearError(contentInput);
+		clearError(senderInput);
+	
+		// Validasi: Jika ada input yang kosong, tampilkan error dan hentikan proses submit
+		let isValid = true;
+		if (!content) {
+			showError(contentInput, 'Field ini tidak boleh kosong');
+			isValid = false;
+		}
+		if (!sender) {
+			showError(senderInput, 'Field ini tidak boleh kosong');
+			isValid = false;
+		}
+		if (!isValid) return; // Hentikan jika ada yang kosong
+	
+		// Ambil waktu saat ini dengan format yang sesuai
+		const now = new Date();
+		const offset = now.getTimezoneOffset() * 60000;
+		const date = new Date(now.getTime() - offset).toISOString().split('T').join(' ').split('.')[0];
+		const id = messages.length + 1;
+		
+		let group_name = Source === 'Telegram' ? 'Kordinasi Antar Group' : 'Email';
+	
+		const dataall = { id, date, Apps: "N/A", Source, group_name, content, sender, Agent: "N/A", Status: "1", Star: "N/A", End: "N/A" };
+	
+		// Tambahkan ke array messages dan update tampilan
+		messages.unshift(dataall);
+		renderTable(messages);
+	
+		// Kirim ke server
+		fetch('/Add-Request', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(dataall),
+		})
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.success) {
+				console.log(`Request ${Source} berhasil ditambahkan`);
+				// Kosongkan form setelah sukses
+				contentInput.value = "";
+				senderInput.value = "";
+			} else {
+				console.error('Gagal menambahkan request');
+			}
+		})
+		.catch((error) => {
+			console.error('Terjadi kesalahan:', error);
+		});
+	}
+	
+	// Fungsi untuk menampilkan pesan error di bawah input
+	function showError(inputElement, message) {
+		let errorSpan = inputElement.nextElementSibling;
+		if (!errorSpan || !errorSpan.classList.contains('error-message')) {
+			errorSpan = document.createElement('span');
+			errorSpan.classList.add('error-message');
+			errorSpan.style.color = 'red';
+			errorSpan.style.fontSize = '12px';
+			inputElement.parentNode.insertBefore(errorSpan, inputElement.nextSibling);
+		}
+		errorSpan.textContent = message;
+	}
+	
+	// Fungsi untuk menghapus pesan error sebelumnya
+	function clearError(inputElement) {
+		let errorSpan = inputElement.nextElementSibling;
+		if (errorSpan && errorSpan.classList.contains('error-message')) {
+			errorSpan.remove();
+		}
+	}
+	
+	
+	
+	function downloadtxt() {
+    fetch('/downloadtxt')
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => console.error('Error downloading Excel:', error));
+	}
+	
+	
+	
+	function EditReq(id) {
+    // Cari pesan berdasarkan ID
+    const message = messages.find((msg) => msg.id === id);
+
+    if (!message) {
+        console.error(`Message dengan ID ${id} tidak ditemukan.`);
+        return;
+    }
+	
+	// Masukkan data ke dalam modal
+    document.getElementById("editdate").value = message.date;
+	document.getElementById("editsource").value = message.Source;
+	document.getElementById("editgroup").value = message.group_name;
+	document.getElementById("editrequestor").value = message.sender;
+	document.getElementById("editstart").value = message.Star;
+	document.getElementById("editend").value = message.End;
+	document.getElementById("editrequest").value = message.content;
+	document.getElementById("editid").value = message.id;
+	
+	
+	console.log(message);
+	
+	}
+
+
+	function saveedit(){
+			
+		// Ambil nilai dari input modal
+			const id = document.getElementById('editid').value.trim();
+			const date = document.getElementById('editdate').value.trim();
+			const Source = document.getElementById('editsource').value.trim();
+			const group_name = document.getElementById('editgroup').value.trim();
+			const sender = document.getElementById('editrequestor').value.trim();
+			const Star = document.getElementById('editstart').value.trim();
+			const End = document.getElementById('editend').value.trim();
+			const content = document.getElementById('editrequest').value.trim();
+		
+			// Buat object data yang akan diperbarui
+			const editdata = { id: parseInt(id), date, Source, group_name, sender, Star, End, content };
+		
+			// Cari index data dalam messages berdasarkan ID
+			let index = messages.findIndex(msg => msg.id === editdata.id);
+			
+			if (index !== -1) {
+				// Jika ID ditemukan, update data di array
+				messages[index] = { ...messages[index], ...editdata };
+			} else {
+				console.error("Data dengan ID tersebut tidak ditemukan.");
+				return;
+			}
+		
+			// Render ulang tabel di frontend
+			renderTable(messages);
+			
+			 // Kirim data yang diperbarui ke backend
+			fetch('/update-message', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(editdata),
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					console.log(`Data ID ${editdata.id} berhasil diperbarui di backend.`);
+				} else {
+					console.error('Gagal memperbarui data di backend:', data.message);
+				}
+			})
+			.catch(error => console.error('Terjadi kesalahan:', error));
+			
+			
+			
+			// Tutup modal setelah menyimpan perubahan
+			let modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
+			modal.hide();
+	}
+	
+	function Delateall(){
+		 // Filter hanya data dengan status "3"
+			const filteredMessages = messages.filter(msg => msg.Status === "3");
+		
+			// Kirim permintaan ke backend untuk menghapus data selain status "3"
+			fetch('/delete-except-status3', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ remainingMessages: filteredMessages })
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					console.log("Data berhasil dihapus kecuali status 3.");
+		
+					// Perbarui data di frontend
+					messages = filteredMessages;
+		
+					// Render ulang tabel agar tampilan sesuai
+					renderTable(messages);
+				} else {
+					console.error("Gagal menghapus data:", data.message);
+				}
+			})
+			.catch(error => {
+				console.error("Terjadi kesalahan:", error);
+			});
+	
+	}
+
+</script>
+
+</body>
+</html>
