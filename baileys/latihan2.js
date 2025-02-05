@@ -5,8 +5,7 @@ const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose(); // Menggunakan SQLite untuk penyimpanan
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;;
-const portSocket = process.env.PORT || 8080;   // Server WebSocket di port 8080
+const port = process.env.PORT || 3000;
 const path = require('path');
 
 const http = require('http');
@@ -15,6 +14,11 @@ const socketIo = require('socket.io');
 const XLSX = require('xlsx');
 
 const authPath = path.join(__dirname, 'auth_info'); // Path absolut untuk auth
+const server = http.createServer(app);
+
+server.listen(port, () => {
+    console.log(`Server berjalan di http://localhost:${port}`);
+});
 
 // Membuat server HTTP menggunakan http.createServer
 const server = http.createServer((req, res) => {
@@ -278,11 +282,6 @@ app.use('/', updateStatusRoute);
 app.listen(port, () => {
     console.log(`Server berjalan di http://localhost:${port}`);
 });
-
-// Menjalankan server pada port tertentu
-//server.listen(portSocket, () => {
-//    console.log('Server listening on port ${portSocket}');
-//});
 
 
 
