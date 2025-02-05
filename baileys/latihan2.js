@@ -262,6 +262,11 @@ app.get('/downloadtxt', (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Routing utama
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
+
 // Middleware untuk parsing JSON
 app.use(express.json());
 
