@@ -25,7 +25,7 @@ const server = http.createServer((req, res) => {
 // Menambahkan Socket.IO ke server
 const io = socketIo(server, {
     cors: {
-        origin: ['https://railway.com/project/9a70c1b1-6707-4717-ac3b-4d35854e1360'],  // Ganti dengan domain tempat frontend Anda di-host
+        origin: ['https://railway.com/project/b6bfbfc8-55a9-4586-8c66-09fa85805f37/index.html'],  // Ganti dengan domain tempat frontend Anda di-host
         methods: ['GET', 'POST'],
         allowedHeaders: ['my-custom-header'],
         credentials: true
