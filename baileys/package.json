@@ -1,5 +1,10 @@
 {
-  "scripts": {
+    "name": "frontend-server",
+    "version": "1.0.0",
+    "description": "Frontend menggunakan HTML, CSS, JavaScript dengan Backend Node.js",
+    "main": "latihan2.js",
+
+    "scripts": {
     "start": "node latihan2.js"
   },
 
